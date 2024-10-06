@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "959197360471",
+    "project_id": "weyoun9th-31211",
+    "storage_bucket": "weyoun9th-31211.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:959197360471:android:9be65ae6213bba20464e12",
+        "android_client_info": {
+          "package_name": "com.weyoun9th"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDgfd59P7YHdbyCrtEsA4fUIWQNTSwDk4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
