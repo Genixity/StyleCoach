@@ -4,19 +4,25 @@ import { NavigationContainer } from '@react-navigation/native';
 import RootNavigation from './src/navigation';
 import { LightTheme, DarkThemeCustom } from './src/styles/theme';
 import { PreferencesContext } from './src/context/preferencesContext';
+import { Appearance } from 'react-native';
 
 export default function App() {
-  const [isThemeDark, setIsThemeDark] = React.useState(false);
+  const [theme, setTheme] = React.useState<'system' | 'light' | 'dark'>('system');
 
-  const toggleTheme = () => {
-    setIsThemeDark(!isThemeDark);
+  const getTheme = () => {
+    if (theme === 'system') {
+      const colorScheme = Appearance.getColorScheme();
+      return colorScheme === 'dark' ? DarkThemeCustom : LightTheme;
+    } else if (theme === 'dark') {
+      return DarkThemeCustom;
+    } else {
+      return LightTheme;
+    }
   };
 
-  const theme = isThemeDark ? DarkThemeCustom : LightTheme;
-
   return (
-    <PreferencesContext.Provider value={{ toggleTheme, isThemeDark }}>
-      <PaperProvider theme={theme}>
+    <PreferencesContext.Provider value={{ setTheme, theme }}>
+      <PaperProvider theme={getTheme()}>
         <NavigationContainer>
           <RootNavigation />
         </NavigationContainer>

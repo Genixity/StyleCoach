@@ -1,16 +1,16 @@
 export function groupByLastUpdated(chats: any) {
-	const currentDate = new Date();
+	const currentDate = Date.now();
 	const groupedData: any = [];
 
 	chats.sort((a: any, b: any) => {
-		const dateA = new Date(a.messages[a.messages.length - 1].createdAt);
-		const dateB = new Date(b.messages[b.messages.length - 1].createdAt);
-		return dateB?.valueOf() - dateA?.valueOf();
+		const dateA = a.messages[a.messages.length - 1].createdAt;
+		const dateB = b.messages[b.messages.length - 1].createdAt;
+		return dateB - dateA;
 	});
 
 	chats.forEach((chat: any) => {
-		const createdAtDate = new Date(chat.messages[chat.messages.length - 1].createdAt);
-		const timeDiff = currentDate.valueOf() - createdAtDate.valueOf();
+		const createdAtTimestamp = chat.messages[chat.messages.length - 1].createdAt;
+		const timeDiff = currentDate - createdAtTimestamp;
 		let group: string;
 
 		if (timeDiff < 24 * 60 * 60 * 1000) {
@@ -22,8 +22,22 @@ export function groupByLastUpdated(chats: any) {
 		} else if (timeDiff < 30 * 24 * 60 * 60 * 1000) {
 			group = "Last 30 Days";
 		} else {
-			const monthNames = "Months";
-			group = monthNames[createdAtDate.getMonth()];
+			const monthNames = [
+				"January",
+				"February",
+				"March",
+				"April",
+				"May",
+				"June",
+				"July",
+				"August",
+				"September",
+				"October",
+				"November",
+				"December",
+			];
+			const date = new Date(createdAtTimestamp);
+			group = monthNames[date.getMonth()];
 		}
 
 		const existingGroup = groupedData.find((groupObj: any) => groupObj.title === group);
@@ -36,16 +50,4 @@ export function groupByLastUpdated(chats: any) {
 	});
 
 	return groupedData;
-}
-
-
-export function splitDisplayName(fullName: string) {
-	const nameParts = fullName.split(",");
-	if (nameParts.length >= 3) {
-		const [username, firstName, lastName] = nameParts;
-		return { username, firstName, lastName };
-	} else {
-		// Handle the case where the full name doesn't contain at least two parts
-		return { username: "", firstName: "", lastName: "" };
-	}
-}
+}  
