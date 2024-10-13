@@ -1,5 +1,3 @@
-// screens/Welcome.tsx
-
 import React from 'react';
 import { StyleSheet, View, ImageBackground } from 'react-native';
 import { Text, Button } from 'react-native-paper';

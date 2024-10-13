@@ -1,13 +1,32 @@
-// navigation/userStack.tsx
-
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import HomeScreen from '../screens/Home';
-import SettingsScreen from '../screens/Settings';
 import { useTheme } from 'react-native-paper';
 
+import ChatHistoryScreen from '../screens/ChatHistory';
+import SettingsScreen from '../screens/Settings';
+import ChatbotScreen from '../screens/Chatbot';
+
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
+
+function ChatStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Chat History"
+        component={ChatHistoryScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Chatbot"
+        component={ChatbotScreen}
+        options={{ title: 'Chatbot' }}
+      />
+    </Stack.Navigator>
+  );
+}
 
 export default function UserStack() {
   const { colors } = useTheme();
@@ -22,11 +41,11 @@ export default function UserStack() {
       }}
     >
       <Tab.Screen
-        name="Home"
-        component={HomeScreen}
+        name="Chat"
+        component={ChatStack}
         options={{
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="home" color={color} size={24} />
+            <MaterialCommunityIcons name="chat" color={color} size={24} />
           ),
         }}
       />
