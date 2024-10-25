@@ -3,6 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import WelcomeScreen from '../screens/Welcome';
 import SignInScreen from '../screens/SignIn';
 import SignUpScreen from '../screens/SignUp';
+import ResetPasswordScreen from '../screens/ResetPassword';
 import { RootStackParamList } from '../types/types';
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -17,6 +18,7 @@ export default function AuthStack() {
       <Stack.Screen name="Welcome" component={WelcomeScreen} />
       <Stack.Screen name="Sign In" component={SignInScreen} />
       <Stack.Screen name="Sign Up" component={SignUpScreen} />
+      <Stack.Screen name="Reset Password" component={ResetPasswordScreen} /> 
     </Stack.Navigator>
   );
 }

@@ -9,10 +9,10 @@ export const authStyles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   logo: {
-    width: 120,
     height: 120,
     alignSelf: 'center',
     marginBottom: 32,
+    resizeMode: 'contain',
   },
   headerText: {
     fontSize: 24,
@@ -34,6 +34,10 @@ export const authStyles = StyleSheet.create({
   },
   errorText: {
     color: 'red',
+    textAlign: 'center',
+  },
+  messageText: {
+    marginBottom: 10,
     textAlign: 'center',
   },
 });

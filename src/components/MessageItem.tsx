@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useMemo } from 'react';
 import {
   View,
   StyleSheet,
@@ -8,25 +8,10 @@ import {
   Dimensions,
   Linking,
   TextStyle,
-} from "react-native";
+} from 'react-native';
 import { useTheme } from 'react-native-paper';
 import Markdown from 'react-native-markdown-display';
-
-interface SelectedImage {
-  uri: string;
-  aspectRatio: number;
-}
-
-interface Message {
-  _id: string;
-  text: string;
-  createdAt: number;
-  user: {
-    _id: number;
-    name: string;
-  };
-  images?: SelectedImage[];
-}
+import { SelectedImage, Message } from '../types/types';
 
 interface MessageItemProps {
   item: Message;
@@ -55,178 +40,189 @@ const MessageItem: React.FC<MessageItemProps> = ({ item, index, openFullImage })
     outputRange: [20, 0],
   });
 
-  // Definice stylů pro Markdown pomocí StyleSheet.create
-  const markdownStyles = StyleSheet.create({
-    body: {
-      fontSize: 16,
-      color: isMyMessage ? '#FAF9F6' : colors.onSurface,
-      lineHeight: 22,
-    } as TextStyle,
-    heading1: {
-      fontSize: 24,
-      fontWeight: '700',
-      color: colors.primary,
-      marginBottom: 8,
-    } as TextStyle,
-    heading2: {
-      fontSize: 20,
-      fontWeight: '700',
-      color: colors.primary,
-      marginBottom: 6,
-    } as TextStyle,
-    heading3: {
-      fontSize: 18,
-      fontWeight: '700',
-      color: colors.primary,
-      marginBottom: 4,
-    } as TextStyle,
-    heading4: {
-      fontSize: 16,
-      fontWeight: '600',
-      color: colors.primary,
-      marginBottom: 4,
-    } as TextStyle,
-    heading5: {
-      fontSize: 14,
-      fontWeight: '600',
-      color: colors.primary,
-      marginBottom: 2,
-    } as TextStyle,
-    heading6: {
-      fontSize: 12,
-      fontWeight: '600',
-      color: colors.primary,
-      marginBottom: 2,
-    } as TextStyle,
-    hr: {
-      borderBottomColor: colors.outline,
-      borderBottomWidth: StyleSheet.hairlineWidth,
-      marginVertical: 8,
-    },
-    strong: {
-      fontWeight: 'bold',
-      color: isMyMessage ? '#FAF9F6' : colors.onSurface,
-    } as TextStyle,
-    em: {
-      fontStyle: 'italic',
-      color: isMyMessage ? '#FAF9F6' : colors.onSurface,
-    } as TextStyle,
-    s: {
-      textDecorationLine: 'line-through',
-      color: colors.outline,
-    } as TextStyle,
-    blockquote: {
-      borderLeftColor: colors.onSurfaceVariant,
-      borderLeftWidth: 4,
-      borderTopEndRadius: 8,
-      borderBottomEndRadius: 8,
-      paddingLeft: 8,
-      color: colors.onSurface,
-      backgroundColor: colors.outline,
-      fontStyle: 'italic',
-    } as TextStyle,
-    list_item: {
-      flexDirection: 'row',
-      alignItems: 'flex-start',
-      marginBottom: 4,
-    },
-    ordered_list_icon: {
-      width: 20,
-      textAlign: 'right',
-      marginRight: 8,
-      color: colors.onSurface,
-      fontSize: 16,
-    },
-    bullet_list_icon: {
-      width: 20,
-      textAlign: 'right',
-      marginRight: 8,
-      color: colors.onSurface,
-      fontSize: 16,
-    },
-    code_inline: {
-      backgroundColor: colors.outline,
-      color: colors.onSurface,
-    } as TextStyle,
-    code_block: {
-      backgroundColor: colors.outline,
-      color: colors.onSurface,
-    } as TextStyle,
-    fence: {
-      backgroundColor: colors.outline,
-      color: colors.onSurface,
-    } as TextStyle,
-    table: {
-      borderWidth: 2,
-      borderColor: colors.outline, // Nahrazení 'disabled' za 'outline'
-      borderRadius: 4,
-      overflow: 'hidden',
-    },
-    thead: {
-      backgroundColor: colors.primary, // Nahrazení 'disabled' za 'outline'
-    },
-    tbody: {},
-    th: {
-      padding: 6,
-      fontWeight: '600',
-      color: colors.onSurface,
-      textAlign: 'left',
-      borderBottomWidth: 1,
-      borderBottomColor: colors.outline,
-    } as TextStyle,
-    tr: {},
-    td: {
-      padding: 6,
-      color: colors.onSurface,
-      textAlign: 'left',
-      borderBottomWidth: 1,
-      borderBottomColor: colors.outline,
-    } as TextStyle,
-    link: {
-      color: colors.primary,
-      textDecorationLine: 'underline',
-    } as TextStyle,
-    blocklink: {
-      color: colors.primary,
-      textDecorationLine: 'underline',
-    } as TextStyle,
-    image: {
-      width: '100%',
-      height: 200,
-      resizeMode: 'cover',
-      borderRadius: 8,
-      marginVertical: 8,
-    },
-    text: {
-      color: isMyMessage ? '#FAF9F6' : colors.onSurface,
-    } as TextStyle,
-    textgroup: {},
-    paragraph: {
-      marginBottom: 8,
-    },
-    hardbreak: {
-      height: 8,
-    },
-    softbreak: {
-      height: 8,
-    },
-    pre: {
-      backgroundColor: colors.outline, // Nahrazení 'disabled' za 'outline'
-      padding: 12,
-      borderRadius: 6,
-      fontFamily: 'Courier',
-      color: colors.onSurface,
-      overflow: 'hidden',
-    } as TextStyle,
-    inline: {},
-    span: {},
-  });
+  const markdownStyles = useMemo(
+    () =>
+      StyleSheet.create({
+        body: {
+          fontSize: 16,
+          color: isMyMessage ? '#FAF9F6' : colors.onSurface,
+          lineHeight: 22,
+        } as TextStyle,
+        heading1: {
+          fontSize: 24,
+          fontWeight: '700',
+          color: colors.primary,
+          marginBottom: 8,
+        } as TextStyle,
+        heading2: {
+          fontSize: 20,
+          fontWeight: '700',
+          color: colors.primary,
+          marginBottom: 6,
+        } as TextStyle,
+        heading3: {
+          fontSize: 18,
+          fontWeight: '700',
+          color: colors.primary,
+          marginBottom: 4,
+        } as TextStyle,
+        heading4: {
+          fontSize: 16,
+          fontWeight: '600',
+          color: colors.primary,
+          marginBottom: 4,
+        } as TextStyle,
+        heading5: {
+          fontSize: 14,
+          fontWeight: '600',
+          color: colors.primary,
+          marginBottom: 2,
+        } as TextStyle,
+        heading6: {
+          fontSize: 12,
+          fontWeight: '600',
+          color: colors.primary,
+          marginBottom: 2,
+        } as TextStyle,
+        hr: {
+          borderBottomColor: colors.outline,
+          borderBottomWidth: StyleSheet.hairlineWidth,
+          marginVertical: 8,
+        },
+        strong: {
+          fontWeight: 'bold',
+          color: isMyMessage ? '#FAF9F6' : colors.onSurface,
+        } as TextStyle,
+        em: {
+          fontStyle: 'italic',
+          color: isMyMessage ? '#FAF9F6' : colors.onSurface,
+        } as TextStyle,
+        s: {
+          textDecorationLine: 'line-through',
+          color: colors.outline,
+        } as TextStyle,
+        blockquote: {
+          borderLeftColor: colors.onSurfaceVariant,
+          borderLeftWidth: 4,
+          borderTopEndRadius: 8,
+          borderBottomEndRadius: 8,
+          paddingLeft: 8,
+          color: colors.onSurface,
+          backgroundColor: colors.outline,
+          fontStyle: 'italic',
+        } as TextStyle,
+        list_item: {
+          flexDirection: 'row',
+          alignItems: 'flex-start',
+          marginBottom: 4,
+        },
+        ordered_list_icon: {
+          width: 20,
+          textAlign: 'right',
+          marginRight: 8,
+          color: colors.onSurface,
+          fontSize: 16,
+        },
+        bullet_list_icon: {
+          width: 20,
+          textAlign: 'right',
+          marginRight: 8,
+          color: colors.onSurface,
+          fontSize: 16,
+        },
+        code_inline: {
+          backgroundColor: colors.outline,
+          color: colors.onSurface,
+        } as TextStyle,
+        code_block: {
+          backgroundColor: colors.outline,
+          color: colors.onSurface,
+        } as TextStyle,
+        fence: {
+          backgroundColor: colors.outline,
+          color: colors.onSurface,
+        } as TextStyle,
+        table: {
+          borderWidth: 2,
+          borderColor: colors.outline,
+          borderRadius: 4,
+          overflow: 'hidden',
+        },
+        thead: {
+          backgroundColor: colors.primary,
+        },
+        tbody: {},
+        th: {
+          padding: 6,
+          fontWeight: '600',
+          color: colors.onSurface,
+          textAlign: 'left',
+          borderBottomWidth: 1,
+          borderBottomColor: colors.outline,
+        } as TextStyle,
+        tr: {},
+        td: {
+          padding: 6,
+          color: colors.onSurface,
+          textAlign: 'left',
+          borderBottomWidth: 1,
+          borderBottomColor: colors.outline,
+        } as TextStyle,
+        link: {
+          color: colors.primary,
+          textDecorationLine: 'underline',
+        } as TextStyle,
+        blocklink: {
+          color: colors.primary,
+          textDecorationLine: 'underline',
+        } as TextStyle,
+        image: {
+          width: '100%',
+          height: 200,
+          resizeMode: 'cover',
+          borderRadius: 8,
+          marginVertical: 8,
+        },
+        text: {
+          color: isMyMessage ? '#FAF9F6' : colors.onSurface,
+        } as TextStyle,
+        textgroup: {},
+        paragraph: {
+          marginBottom: 8,
+        },
+        hardbreak: {
+          height: 8,
+        },
+        softbreak: {
+          height: 8,
+        },
+        pre: {
+          backgroundColor: colors.outline,
+          padding: 12,
+          borderRadius: 6,
+          fontFamily: 'Courier',
+          color: colors.onSurface,
+          overflow: 'hidden',
+        } as TextStyle,
+        inline: {},
+        span: {},
+      }),
+    [colors, isMyMessage]
+  );
+
+  const renderedImages = useMemo(
+    () =>
+      item.images && totalImages > 0
+        ? renderImages(item.images, totalImages, openFullImage, colors)
+        : null,
+    [item.images, totalImages, openFullImage, colors]
+  );
 
   return (
     <Animated.View
       style={{ marginBottom: 10, transform: [{ translateY }], opacity: animatedValue }}
     >
-      {item.images && totalImages > 0 && (
+      {renderedImages && (
         <View
           style={[
             styles.imageContainer,
@@ -234,7 +230,7 @@ const MessageItem: React.FC<MessageItemProps> = ({ item, index, openFullImage })
             styles.shadowStyle,
           ]}
         >
-          {renderImages(item.images, totalImages, openFullImage, colors)}
+          {renderedImages}
         </View>
       )}
       {item.text !== '' && (
@@ -250,7 +246,7 @@ const MessageItem: React.FC<MessageItemProps> = ({ item, index, openFullImage })
             style={markdownStyles}
             onLinkPress={(url) => {
               Linking.openURL(url).catch((err) =>
-                console.error("Failed to open URL:", err)
+                console.error('Failed to open URL:', err)
               );
               return true;
             }}
@@ -301,29 +297,26 @@ const renderImages = (
 
     return (
       <View style={[styles.imageRow, { justifyContent: 'flex-end' }]}>
-        {[...images]
-          .reverse() // Obrátí pořadí obrázků
-          .map((image, index) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => openFullImage(image.uri)}
-            >
-              <Image
-                source={{ uri: image.uri }}
-                style={{
-                  width: imageWidth,
-                  height: imageWidth,
-                  borderRadius: 8,
-                  margin: 2,
-                }}
-                resizeMode="cover"
-              />
-            </TouchableOpacity>
-          ))}
+        {images.map((image, index) => (
+          <TouchableOpacity key={index} onPress={() => openFullImage(image.uri)}>
+            <Image
+              source={{ uri: image.uri }}
+              style={{
+                width: imageWidth,
+                height: imageWidth,
+                borderRadius: 8,
+                margin: 2,
+              }}
+              resizeMode="cover"
+            />
+          </TouchableOpacity>
+        ))}
       </View>
     );
   }
 };
+
+export default React.memo(MessageItem);
 
 const styles = StyleSheet.create({
   imageContainer: {
@@ -359,7 +352,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   shadowStyle: {
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -369,5 +362,3 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
 });
-
-export default React.memo(MessageItem);

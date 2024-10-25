@@ -1,5 +1,3 @@
-// src/screens/SignUp.tsx
-
 import React from 'react';
 import { View, Image } from 'react-native';
 import { TextInput, Button, Text, useTheme } from 'react-native-paper';
@@ -34,6 +32,7 @@ function SignUpScreen({ navigation }: SignUpProps) {
         <Image
           source={require('../../assets/logo.png')}
           style={authStyles.logo}
+          resizeMode="contain"
         />
         <Text style={[authStyles.headerText, { color: colors.primary }]}>
           Sign Up
@@ -45,6 +44,7 @@ function SignUpScreen({ navigation }: SignUpProps) {
           style={authStyles.input}
           inputMode="email"
           autoComplete="email"
+          autoFocus
           onChangeText={(text) => setValue({ ...value, email: text })}
           mode="outlined"
           theme={{ colors: { primary: colors.primary } }}
@@ -79,6 +79,15 @@ function SignUpScreen({ navigation }: SignUpProps) {
             onPress={() => navigation.navigate('Sign In')}
           >
             Sign In
+          </Text>
+        </Text>
+        <Text style={authStyles.footerText}>
+          Forgot your password?{' '}
+          <Text
+            style={[authStyles.linkText, { color: colors.primary }]}
+            onPress={() => navigation.navigate('Reset Password', { email: value.email })}
+          >
+            Reset Password
           </Text>
         </Text>
       </View>
