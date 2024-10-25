@@ -1,3 +1,5 @@
+// src/screens/SignUp.tsx
+
 import React from 'react';
 import { View, Image } from 'react-native';
 import { TextInput, Button, Text, useTheme } from 'react-native-paper';
@@ -21,7 +23,6 @@ function SignUpScreen({ navigation }: SignUpProps) {
 
     try {
       await auth().createUserWithEmailAndPassword(value.email, value.password);
-      navigation.navigate('Sign In');
     } catch (error: any) {
       setValue({ ...value, error: error.message });
     }
@@ -47,7 +48,7 @@ function SignUpScreen({ navigation }: SignUpProps) {
           onChangeText={(text) => setValue({ ...value, email: text })}
           mode="outlined"
           theme={{ colors: { primary: colors.primary } }}
-          />
+        />
         <TextInput
           label="Password"
           value={value.password}
