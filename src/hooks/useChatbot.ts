@@ -8,7 +8,7 @@ import { openaiApi } from '../api';
 import { useAuth } from './useAuth';
 import { PreferencesContext } from '../context/preferencesContext';
 import { groupByLastUpdated } from '../utils/chatUtils';
-import { Message, SelectedImage, ChatItem, ChatSection } from '../types/types';
+import { Message, SelectedImage, ChatSection } from '../types/types';
 import auth from '@react-native-firebase/auth';
 
 export const useChatbot = () => {

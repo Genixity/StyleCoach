@@ -79,9 +79,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.weyoun9th"
+    namespace "com.stylecoach"
     defaultConfig {
-        applicationId "com.weyoun9th"
+        applicationId "com.stylecoach"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

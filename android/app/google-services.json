@@ -1,22 +1,22 @@
 {
   "project_info": {
-    "project_number": "959197360471",
-    "firebase_url": "https://weyoun9th-31211-default-rtdb.europe-west1.firebasedatabase.app",
-    "project_id": "weyoun9th-31211",
-    "storage_bucket": "weyoun9th-31211.appspot.com"
+    "project_number": "378203909674",
+    "firebase_url": "https://style-coach-2ea79-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "style-coach-2ea79",
+    "storage_bucket": "style-coach-2ea79.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:959197360471:android:9be65ae6213bba20464e12",
+        "mobilesdk_app_id": "1:378203909674:android:aab19d2d155552db021d53",
         "android_client_info": {
-          "package_name": "com.weyoun9th"
+          "package_name": "com.stylecoach"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCDgfd59P7YHdbyCrtEsA4fUIWQNTSwDk4"
+          "current_key": "AIzaSyBg_90vdNh34lVrb2DyzXnAVmvqyj6_V88"
         }
       ],
       "services": {
