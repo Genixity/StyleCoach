@@ -139,6 +139,9 @@ PODS:
   - PromisesObjC (2.4.0)
   - PurchasesHybridCommon (13.8.0):
     - RevenueCat (= 5.7.1)
+  - PurchasesHybridCommonUI (13.8.0):
+    - PurchasesHybridCommon (= 13.8.0)
+    - RevenueCatUI (= 5.7.1)
   - RCT-Folly (2024.01.01.00):
     - boost
     - DoubleConversion
@@ -1732,6 +1735,8 @@ PODS:
     - React-utils (= 0.76.1)
   - RecaptchaInterop (100.0.0)
   - RevenueCat (5.7.1)
+  - RevenueCatUI (5.7.1):
+    - RevenueCat (= 5.7.1)
   - RNCMaskedView (0.3.2):
     - DoubleConversion
     - glog
@@ -1787,6 +1792,9 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - RNPaywalls (8.2.6):
+    - PurchasesHybridCommonUI (= 13.8.0)
+    - React-Core
   - RNPurchases (8.2.6):
     - PurchasesHybridCommon (= 13.8.0)
     - React-Core
@@ -1956,6 +1964,7 @@ DEPENDENCIES:
   - "RNFBDatabase (from `../node_modules/@react-native-firebase/database`)"
   - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNPaywalls (from `../node_modules/react-native-purchases-ui`)
   - RNPurchases (from `../node_modules/react-native-purchases`)
   - RNReactNativeHapticFeedback (from `../node_modules/react-native-haptic-feedback`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -1982,8 +1991,10 @@ SPEC REPOS:
     - nanopb
     - PromisesObjC
     - PurchasesHybridCommon
+    - PurchasesHybridCommonUI
     - RecaptchaInterop
     - RevenueCat
+    - RevenueCatUI
     - SocketRocket
 
 EXTERNAL SOURCES:
@@ -2130,6 +2141,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-fs"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNPaywalls:
+    :path: "../node_modules/react-native-purchases-ui"
   RNPurchases:
     :path: "../node_modules/react-native-purchases"
   RNReactNativeHapticFeedback:
@@ -2166,6 +2179,7 @@ SPEC CHECKSUMS:
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   PurchasesHybridCommon: bfd5bcf640a5c0a137d09287cdffcb4cf28fc12f
+  PurchasesHybridCommonUI: 888752a9160104c1c4bfd8ace7f60b0fdc9d4bef
   RCT-Folly: bf5c0376ffe4dd2cf438dcf86db385df9fdce648
   RCTDeprecation: fde92935b3caa6cb65cbff9fbb7d3a9867ffb259
   RCTRequired: 75c6cee42d21c1530a6f204ba32ff57335d19007
@@ -2227,12 +2241,14 @@ SPEC CHECKSUMS:
   ReactCommon: 08db07e471b7ee1cadfa9e347c8224fd4cefc4b5
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
   RevenueCat: fd13e14159aefb128a8e822451d08418e04fdda3
+  RevenueCatUI: 790ed2c20ceddbebe84b873f4998b555eea84a9e
   RNCMaskedView: 381d041f80e6bf7983d2c058a34362e6a362ce01
   RNFBApp: fa976629c5a8617da9870929534602020244e28f
   RNFBAuth: fbabf33f5da7a7edaaba970ca0f055463d6173fc
   RNFBDatabase: 842eebaeac931db2e8c1256e9eed2a65c3040525
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNGestureHandler: 598e45cedb905b157e9764acbef0b5e365693451
+  RNPaywalls: 8bdf157080f5e13da78350d1e2921ad003a0f869
   RNPurchases: 83d9d83c57ad9518fb033d1898229a6690b09a63
   RNReactNativeHapticFeedback: 2db53cf1075a3046227b8131a5cba84f25abccdc
   RNScreens: 6e2ab381864f079fce8a18ddf49ef6f164d7d7bd

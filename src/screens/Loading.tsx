@@ -6,7 +6,7 @@ export default function LoadingScreen() {
     const { colors } = useTheme();
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, {backgroundColor: colors.background}]}>
             <Image source={require('../../assets/logo.png')} style={styles.logo} />
             <ActivityIndicator size="large" color={colors.primary} style={styles.loader} />
         </View>
@@ -16,7 +16,6 @@ export default function LoadingScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#F9F1E9',
         justifyContent: 'center',
         alignItems: 'center',
     },

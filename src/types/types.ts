@@ -33,6 +33,8 @@ export type RootStackParamList = {
   'Sign Up': undefined;
   'Reset Password': { email?: string };
   Chatbot: undefined;
+  Paywall: undefined;
+  ChatbotContent: undefined;
 };
 
 export type SignInProps = StackScreenProps<RootStackParamList, 'Sign In'>;
