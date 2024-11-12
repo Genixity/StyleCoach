@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Image } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { TextInput, Button, Text, useTheme } from 'react-native-paper';
 import auth from '@react-native-firebase/auth';
 import { SignUpProps } from '../types/types';
@@ -27,71 +28,72 @@ function SignUpScreen({ navigation }: SignUpProps) {
   }
 
   return (
-    <View style={[authStyles.fullScreen, { backgroundColor: colors.background }]}>
-      <View style={authStyles.container}>
-        <Image
-          source={require('../../assets/logo.png')}
-          style={authStyles.logo}
-          resizeMode="contain"
-        />
-        <Text style={[authStyles.headerText, { color: colors.primary }]}>
-          Sign Up
-        </Text>
+    <KeyboardAwareScrollView
+      style={{ backgroundColor: colors.background }}
+      contentContainerStyle={authStyles.fullScreen}
+    >
+      <Image
+        source={require('../../assets/logo.png')}
+        style={authStyles.logo}
+        resizeMode="contain"
+      />
+      <Text style={[authStyles.headerText, { color: colors.primary }]}>
+        Sign Up
+      </Text>
 
-        <TextInput
-          label="Email"
-          value={value.email}
-          style={authStyles.input}
-          inputMode="email"
-          autoComplete="email"
-          autoFocus
-          onChangeText={(text) => setValue({ ...value, email: text })}
-          mode="outlined"
-          theme={{ colors: { primary: colors.primary } }}
-        />
-        <TextInput
-          label="Password"
-          value={value.password}
-          style={authStyles.input}
-          autoComplete="new-password"
-          onChangeText={(text) => setValue({ ...value, password: text })}
-          secureTextEntry
-          mode="outlined"
-          theme={{ colors: { primary: colors.primary } }}
-        />
-        {value.error ? (
-          <Text style={authStyles.errorText}>{value.error}</Text>
-        ) : null}
-        <Button
-          mode="contained"
-          onPress={signUp}
-          style={authStyles.button}
-          contentStyle={{ paddingVertical: 8 }}
-          theme={{ colors: { primary: colors.primary } }}
-          uppercase={false}
+      <TextInput
+        label="Email"
+        value={value.email}
+        style={authStyles.input}
+        inputMode="email"
+        autoComplete="email"
+        autoFocus
+        onChangeText={(text) => setValue({ ...value, email: text })}
+        mode="outlined"
+        theme={{ colors: { primary: colors.primary } }}
+      />
+      <TextInput
+        label="Password"
+        value={value.password}
+        style={authStyles.input}
+        autoComplete="new-password"
+        onChangeText={(text) => setValue({ ...value, password: text })}
+        secureTextEntry
+        mode="outlined"
+        theme={{ colors: { primary: colors.primary } }}
+      />
+      {value.error ? (
+        <Text style={authStyles.errorText}>{value.error}</Text>
+      ) : null}
+      <Button
+        mode="contained"
+        onPress={signUp}
+        style={authStyles.button}
+        contentStyle={{ paddingVertical: 8 }}
+        theme={{ colors: { primary: colors.primary } }}
+        uppercase={false}
+      >
+        Sign Up
+      </Button>
+      <Text style={authStyles.footerText}>
+        Already have an account?{' '}
+        <Text
+          style={[authStyles.linkText, { color: colors.primary }]}
+          onPress={() => navigation.navigate('Sign In')}
         >
-          Sign Up
-        </Button>
-        <Text style={authStyles.footerText}>
-          Already have an account?{' '}
-          <Text
-            style={[authStyles.linkText, { color: colors.primary }]}
-            onPress={() => navigation.navigate('Sign In')}
-          >
-            Sign In
-          </Text>
+          Sign In
         </Text>
-        <Text style={authStyles.footerText}>
-          Forgot your password?{' '}
-          <Text
-            style={[authStyles.linkText, { color: colors.primary }]}
-            onPress={() => navigation.navigate('Reset Password', { email: value.email })}
-          >
-            Reset Password
-          </Text>
+      </Text>
+      <Text style={authStyles.footerText}>
+        Forgot your password?{' '}
+        <Text
+          style={[authStyles.linkText, { color: colors.primary }]}
+          onPress={() => navigation.navigate('Reset Password', { email: value.email })}
+        >
+          Reset Password
         </Text>
-      </View>
-    </View>
+      </Text>
+    </KeyboardAwareScrollView>
   );
 }
 

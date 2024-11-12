@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Animated, Keyboard } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTheme } from 'react-native-paper';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
@@ -29,6 +29,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
       ReactNativeHapticFeedback.trigger('impactLight');
     }
     handleToggleSidePanel();
+    Keyboard.dismiss(); // Dismiss the keyboard when toggling the side panel
   }, [hapticEnabled, handleToggleSidePanel]);
 
   return (

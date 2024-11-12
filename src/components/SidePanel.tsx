@@ -10,6 +10,7 @@ import {
     Dimensions,
     RefreshControl,
     TouchableWithoutFeedback,
+    Keyboard,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTheme } from 'react-native-paper';
@@ -117,6 +118,7 @@ const SidePanel: React.FC<SidePanelProps> = ({
                         setChatId(item.id);
                         setMessages(item.messages);
                         setIsSidePanelOpen(false);
+                        Keyboard.dismiss(); // Dismiss the keyboard when selecting a chat
                     }
                     isLongPress.current = false;
                 }}
@@ -150,80 +152,86 @@ const SidePanel: React.FC<SidePanelProps> = ({
     }: {
         section: { title: string };
     }) => (
-        <Text style={[styles.sectionHeader, { color: colors.primary }]}>{title}</Text>
+        <Text style={[styles.sectionHeader, { backgroundColor: colors.background, color: colors.primary }]}>{title}</Text>
     );
 
     const chatKeyExtractor = (item: ChatItem) => item.id;
 
+    const handleOverlayPress = () => {
+        setIsSidePanelOpen(false);
+        Keyboard.dismiss();
+    };
+
     return (
         <>
-            {/* Greyed-Out Overlay */}
             {isSidePanelOpen && (
-                <TouchableWithoutFeedback onPress={() => setIsSidePanelOpen(false)}>
+                <TouchableWithoutFeedback onPress={handleOverlayPress}>
                     <Animated.View style={[styles.greyedOutOverlay, { backgroundColor }]} />
                 </TouchableWithoutFeedback>
             )}
 
-            {/* Side Panel */}
             <Animated.View
                 style={[
                     styles.sidePanel,
                     {
-                        backgroundColor: colors.background,
-                        borderRightColor: colors.surfaceVariant,
                         transform: [{ translateX: sidePanelTranslateX }],
                     },
                 ]}
             >
-                {/* Search Field */}
-                <View style={styles.searchContainer}>
-                    <View
-                        style={[
-                            styles.searchInputWrapper,
-                            { backgroundColor: colors.surface },
-                            styles.shadowStyle,
-                        ]}
-                    >
-                        <Ionicons
-                            name="search"
-                            size={20}
-                            color={colors.onSurface}
-                            style={{ marginRight: 8 }}
-                        />
-                        <TextInput
-                            style={[styles.searchInput, { color: colors.onSurface }]}
-                            placeholder="Search chats..."
-                            placeholderTextColor={colors.onSurface}
-                            value={searchQuery}
-                            onChangeText={handleSearch}
-                        />
-                    </View>
-                </View>
-                {/* Chat History */}
-                <SectionList
-                    sections={chatList}
-                    keyExtractor={chatKeyExtractor}
-                    renderItem={renderChatListItem}
-                    renderSectionHeader={renderSectionHeader}
-                    contentContainerStyle={{ padding: 10 }}
-                    refreshControl={
-                        <RefreshControl refreshing={refreshing} onRefresh={fetchChatList} />
-                    }
-                />
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                    <View style={{ backgroundColor: colors.background, flex: 1 }}>
+                        <View style={styles.searchContainer}>
+                            <View
+                                style={[
+                                    styles.searchInputWrapper,
+                                    { backgroundColor: colors.surface },
+                                    styles.shadowStyle,
+                                ]}
+                            >
+                                <Ionicons
+                                    name="search"
+                                    size={20}
+                                    color={colors.onSurface}
+                                    style={{ marginRight: 8 }}
+                                />
+                                <TextInput
+                                    style={[styles.searchInput, { color: colors.onSurface }]}
+                                    placeholder="Search chats..."
+                                    placeholderTextColor={colors.onSurface}
+                                    value={searchQuery}
+                                    onChangeText={handleSearch}
+                                />
+                            </View>
+                        </View>
 
-                {/* Bottom Container */}
-                <TouchableOpacity
-                    style={[
-                        styles.bottomContainer,
-                        { borderTopColor: colors.surfaceVariant, padding: 15 },
-                    ]}
-                    onPress={() => setIsSettingsModalVisible(true)}
-                >
-                    <Text style={[styles.userEmailValue, { color: colors.onSurface }]}>
-                        {user?.email}
-                    </Text>
-                    <Ionicons name="ellipsis-horizontal" size={24} color={colors.onSurface} />
-                </TouchableOpacity>
+                        <SectionList
+                            sections={chatList}
+                            keyExtractor={chatKeyExtractor}
+                            renderItem={renderChatListItem}
+                            renderSectionHeader={renderSectionHeader}
+                            contentContainerStyle={{ padding: 10 }}
+                            refreshControl={
+                                <RefreshControl refreshing={refreshing} onRefresh={fetchChatList} />
+                            }
+                        />
+
+                        <TouchableOpacity
+                            style={[
+                                styles.bottomContainer,
+                                { borderTopColor: colors.surfaceVariant, padding: 15 },
+                            ]}
+                            onPress={() => {
+                                setIsSettingsModalVisible(true);
+                                Keyboard.dismiss(); // Dismiss the keyboard when opening settings
+                            }}
+                        >
+                            <Text style={[styles.userEmailValue, { color: colors.onSurface }]}>
+                                {user?.email}
+                            </Text>
+                            <Ionicons name="ellipsis-horizontal" size={24} color={colors.onSurface} />
+                        </TouchableOpacity>
+                    </View>
+                </TouchableWithoutFeedback>
             </Animated.View>
         </>
     );
@@ -247,7 +255,6 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width * 0.75,
         height: '100%',
         zIndex: 2,
-        borderRightWidth: 1,
     },
     searchContainer: {
         padding: 10,
@@ -256,6 +263,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: 10,
+        paddingVertical: 12,
         borderRadius: 8,
     },
     searchInput: {
@@ -272,8 +280,8 @@ const styles = StyleSheet.create({
     sectionHeader: {
         fontSize: 14,
         fontWeight: 'bold',
-        marginBottom: 8,
-        marginTop: 10,
+        paddingBottom: 8,
+        paddingTop: 10,
     },
     bottomContainer: {
         flexDirection: 'row',

@@ -123,6 +123,7 @@ const styles = StyleSheet.create({
   selectedImagesContainer: {
     flexDirection: 'row',
     paddingHorizontal: 15,
+    paddingTop: 15,
   },
   selectedImageWrapper: {
     position: 'relative',

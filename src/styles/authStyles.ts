@@ -4,8 +4,6 @@ export const authStyles = StyleSheet.create({
   fullScreen: {
     flex: 1,
     justifyContent: 'center',
-  },
-  container: {
     paddingHorizontal: 16,
   },
   logo: {

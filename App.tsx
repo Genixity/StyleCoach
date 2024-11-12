@@ -12,6 +12,7 @@ import {
   PUBLIC_REVENUECAT_IOS_KEY,
   PUBLIC_REVENUECAT_ANDROID_KEY,
 } from '@env';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const apiKey = Platform.select({
   ios: PUBLIC_REVENUECAT_IOS_KEY,
@@ -28,7 +29,36 @@ export default function App() {
     }
   }, []);
 
-  const [theme, setTheme] = React.useState<'system' | 'light' | 'dark'>('system');
+  const [theme, setThemeState] = React.useState<'system' | 'light' | 'dark'>('system');
+
+  useEffect(() => {
+    const loadTheme = async () => {
+      try {
+        const storedTheme = await AsyncStorage.getItem('theme');
+        if (storedTheme !== null) {
+          setThemeState(storedTheme as 'system' | 'light' | 'dark');
+        }
+      } catch (error) {
+        console.error('Failed to load theme:', error);
+      }
+    };
+    loadTheme();
+  }, []);
+
+  useEffect(() => {
+    const saveTheme = async () => {
+      try {
+        await AsyncStorage.setItem('theme', theme);
+      } catch (error) {
+        console.error('Failed to save theme:', error);
+      }
+    };
+    saveTheme();
+  }, [theme]);
+
+  const setTheme = (newTheme: 'system' | 'light' | 'dark') => {
+    setThemeState(newTheme);
+  };
 
   const getTheme = () => {
     if (theme === 'system') {

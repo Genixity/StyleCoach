@@ -86,44 +86,42 @@ const ChatContent: React.FC<ChatContentProps> = ({
     [colors.onSurface]
   );
 
-
   return (
-    <View style={styles.chatContainer}>
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
-      >
-        {messages.length === 0 ? (
-          renderEmptyChat
-        ) : (
-          <>
-            <FlatList
-              data={messages}
-              renderItem={renderMessageItem}
-              keyExtractor={messageKeyExtractor}
-              contentContainerStyle={{ padding: 16 }}
-            />
-            {isTyping && (
-              <View style={styles.typingIndicatorContainer}>
-                <TypingAnimation dotMargin={10} dotRadius={4} dotColor={colors.onSurface} />
-              </View>
-            )}
-          </>
-        )}
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 110 : 0}
+    >
+      {messages.length === 0 ? (
+        renderEmptyChat
+      ) : (
+        <>
+          <FlatList
+            data={messages}
+            renderItem={renderMessageItem}
+            keyExtractor={messageKeyExtractor}
+            contentContainerStyle={{ padding: 16 }}
+            keyboardShouldPersistTaps="handled" // Allow tapping inside FlatList without dismissing the keyboard
+          />
+          {isTyping && (
+            <View style={styles.typingIndicatorContainer}>
+              <TypingAnimation dotMargin={10} dotRadius={4} dotColor={colors.onSurface} />
+            </View>
+          )}
+        </>
+      )}
 
-        <InputBar
-          inputText={inputText}
-          setInputText={setInputText}
-          selectedImages={selectedImages}
-          removeSelectedImage={removeSelectedImage}
-          handlePickImage={handlePickImage}
-          handleTakePhoto={handleTakePhoto}
-          onSend={onSend}
-          isSendButtonVisible={isSendButtonVisible}
-          sendButtonAnimation={sendButtonAnimation}
-        />
-      </KeyboardAvoidingView>
+      <InputBar
+        inputText={inputText}
+        setInputText={setInputText}
+        selectedImages={selectedImages}
+        removeSelectedImage={removeSelectedImage}
+        handlePickImage={handlePickImage}
+        handleTakePhoto={handleTakePhoto}
+        onSend={onSend}
+        isSendButtonVisible={isSendButtonVisible}
+        sendButtonAnimation={sendButtonAnimation}
+      />
 
       <FullImageModal fullImageUri={fullImageUri} setFullImageUri={setFullImageUri} />
 
@@ -134,16 +132,13 @@ const ChatContent: React.FC<ChatContentProps> = ({
         setNewChatTitle={setNewChatTitle}
         renameChat={renameChat}
       />
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
 export default React.memo(ChatContent);
 
 const styles = StyleSheet.create({
-  chatContainer: {
-    flex: 1,
-  },
   container: {
     flex: 1,
   },

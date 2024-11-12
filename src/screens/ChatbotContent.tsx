@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, View, StyleSheet } from 'react-native';
+import { SafeAreaView, View, StyleSheet, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { useChatbot } from '../hooks/useChatbot';
 import ChatHeader from '../components/ChatHeader';
@@ -70,30 +70,34 @@ const ChatbotContent = () => {
         hapticEnabled={hapticEnabled}
         burgerToCrossProgress={burgerToCrossProgress}
       />
-
+      
       <View style={{ flex: 1 }}>
-        <ChatContent
-          messages={messages}
-          isTyping={isTyping}
-          inputText={inputText}
-          setInputText={setInputText}
-          selectedImages={selectedImages}
-          removeSelectedImage={removeSelectedImage}
-          handlePickImage={handlePickImage}
-          handleTakePhoto={handleTakePhoto}
-          onSend={onSend}
-          isSendButtonVisible={isSendButtonVisible}
-          sendButtonAnimation={sendButtonAnimation}
-          openFullImage={openFullImage}
-          fullImageUri={fullImageUri}
-          setFullImageUri={setFullImageUri}
-          isRenameModalVisible={isRenameModalVisible}
-          setIsRenameModalVisible={setIsRenameModalVisible}
-          newChatTitle={newChatTitle}
-          setNewChatTitle={setNewChatTitle}
-          renameChat={renameChat}
-        />
+        {/* Wrap only ChatContent with TouchableWithoutFeedback */}
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <ChatContent
+            messages={messages}
+            isTyping={isTyping}
+            inputText={inputText}
+            setInputText={setInputText}
+            selectedImages={selectedImages}
+            removeSelectedImage={removeSelectedImage}
+            handlePickImage={handlePickImage}
+            handleTakePhoto={handleTakePhoto}
+            onSend={onSend}
+            isSendButtonVisible={isSendButtonVisible}
+            sendButtonAnimation={sendButtonAnimation}
+            openFullImage={openFullImage}
+            fullImageUri={fullImageUri}
+            setFullImageUri={setFullImageUri}
+            isRenameModalVisible={isRenameModalVisible}
+            setIsRenameModalVisible={setIsRenameModalVisible}
+            newChatTitle={newChatTitle}
+            setNewChatTitle={setNewChatTitle}
+            renameChat={renameChat}
+          />
+        </TouchableWithoutFeedback>
 
+        {/* SidePanel and SettingsModal are outside the TouchableWithoutFeedback */}
         <SidePanel
           isSidePanelOpen={isSidePanelOpen}
           sidePanelAnimation={sidePanelAnimation}

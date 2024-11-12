@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useContext } from 'react';
 import { Animated, Easing, Platform, Alert, Keyboard } from 'react-native';
 import RNFS from 'react-native-fs';
-import { launchCamera, launchImageLibrary, ImageLibraryOptions, CameraOptions, MediaType } from 'react-native-image-picker';
+import { launchCamera, launchImageLibrary, ImageLibraryOptions, CameraOptions, MediaType, ImagePickerResponse } from 'react-native-image-picker';
 import database from '@react-native-firebase/database';
 import ReactNativeHapticFeedback, { HapticFeedbackTypes } from 'react-native-haptic-feedback';
 import { openaiApi } from '../api';
@@ -20,6 +20,7 @@ export const useChatbot = () => {
   const [fullImageUri, setFullImageUri] = useState<string | null>(null);
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
   const [chatList, setChatList] = useState<ChatSection[]>([]);
+  const [originalChatList, setOriginalChatList] = useState<ChatSection[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSettingsModalVisible, setIsSettingsModalVisible] = useState(false);
@@ -40,7 +41,6 @@ export const useChatbot = () => {
 
   const userId = user?.uid || '';
 
-  // Helper function for haptic feedback
   const triggerHapticFeedback = useCallback(
     (type: HapticFeedbackTypes = HapticFeedbackTypes.impactLight) => {
       if (hapticEnabled) {
@@ -136,15 +136,19 @@ export const useChatbot = () => {
         if (chatListData.length) {
           const groupedChatList = groupByLastUpdated(chatListData);
           setChatList(groupedChatList);
+          setOriginalChatList(groupedChatList);
         } else {
           setChatList([]);
+          setOriginalChatList([]);
         }
       } else {
         setChatList([]);
+        setOriginalChatList([]);
       }
     } catch (error) {
       console.error('Error fetching chats:', error);
       setChatList([]);
+      setOriginalChatList([]);
     } finally {
       setRefreshing(false);
     }
@@ -334,25 +338,42 @@ export const useChatbot = () => {
     });
   }, [selectedImages.length, triggerHapticFeedback]);
 
-  const handleTakePhoto = useCallback(() => {
-    triggerHapticFeedback();
-
-    const options: CameraOptions = {
-      mediaType: 'photo' as MediaType,
-    };
-
-    launchCamera(options, (response) => {
-      if (response.assets) {
-        const asset = response.assets[0];
-        const newImage = {
+  const handleTakePhoto = useCallback(async () => {
+    try {
+      triggerHapticFeedback();
+  
+      const options: CameraOptions = {
+        mediaType: 'photo' as MediaType,
+        saveToPhotos: true,
+      };
+  
+      const result: ImagePickerResponse = await launchCamera(options);
+  
+      if (result.didCancel) {
+        console.log('User cancelled image picker');
+        return;
+      }
+  
+      if (result.errorCode) {
+        console.error('ImagePicker Error: ', result.errorMessage);
+        Alert.alert('Error', 'Failed to take photo. Please try again.');
+        return;
+      }
+  
+      if (result.assets && result.assets.length > 0) {
+        const asset = result.assets[0];
+        const newImage: SelectedImage = {
           uri: asset.uri || '',
           aspectRatio:
             asset.width && asset.height ? asset.width / asset.height : 1,
         };
         setSelectedImages((prevImages) => [...prevImages, newImage]);
       }
-    });
-  }, [triggerHapticFeedback]);
+    } catch (error) {
+      console.error('Unexpected Error: ', error);
+      Alert.alert('Error', 'An unexpected error occurred.');
+    }
+  }, [triggerHapticFeedback, setSelectedImages]);
 
   const removeSelectedImage = (index: number) => {
     const updatedImages = [...selectedImages];
@@ -368,11 +389,16 @@ export const useChatbot = () => {
     triggerHapticFeedback();
     setChatId(null);
     setMessages([]);
+    Keyboard.dismiss();
   }, [triggerHapticFeedback]);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    const filteredChats = chatList
+    if (query.trim() === '') {
+      setChatList(originalChatList);
+      return;
+    }
+    const filteredChats = originalChatList
       .map((section) => {
         const filteredData = section.data.filter((chat) => {
           const titleMatch = chat.title
@@ -402,6 +428,10 @@ export const useChatbot = () => {
     try {
       await database().ref(`/chats/${userId}/${chatId}`).remove();
       fetchChatList();
+      if (chatId === chatId) {
+        setChatId(null);
+        setMessages([]);
+      }
     } catch (e) {
       console.error('Error deleting chat:', e);
     }
@@ -423,6 +453,7 @@ export const useChatbot = () => {
   const handleToggleSidePanel = useCallback(() => {
     triggerHapticFeedback();
     setIsSidePanelOpen((prev) => !prev);
+    Keyboard.dismiss();
   }, [triggerHapticFeedback]);
 
   const signOut = () => {
@@ -430,7 +461,6 @@ export const useChatbot = () => {
     auth().signOut();
   };
 
-  // Helper function to capitalize the first letter
   const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
   return {

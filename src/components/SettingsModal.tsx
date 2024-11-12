@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Modal from 'react-native-modal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Switch, useTheme } from 'react-native-paper';
-import ContextMenu from 'react-native-context-menu-view';
+import { Switch, useTheme, RadioButton, Button } from 'react-native-paper';
 
 interface SettingsModalProps {
     isSettingsModalVisible: boolean;
@@ -29,6 +28,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     signOut,
 }) => {
     const { colors } = useTheme();
+    const [themeModalVisible, setThemeModalVisible] = useState(false);
 
     return (
         <Modal
@@ -61,52 +61,25 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                     <Text style={[styles.settingsTitle, { color: colors.onSurface }]}>
                         Color Scheme
                     </Text>
-                    <ContextMenu
-                        title="Select Color Scheme"
-                        actions={[
-                            { title: 'System' },
-                            { title: 'Light' },
-                            { title: 'Dark' },
-                        ]}
-                        onPress={(e) => {
-                            const { index } = e.nativeEvent;
-                            const options: Array<'system' | 'light' | 'dark'> = [
-                                'system',
-                                'light',
-                                'dark',
-                            ];
-                            const selectedTheme = options[index];
-                            if (selectedTheme) {
-                                setTheme(selectedTheme);
-                            }
-                        }}
+                    <TouchableOpacity
+                        style={styles.colorSchemeSelector}
+                        onPress={() => setThemeModalVisible(true)}
                     >
-                        <TouchableOpacity style={styles.colorSchemeSelector}>
-                            <Text
-                                style={{
-                                    color: colors.onSurface,
-                                    fontSize: 18,
-                                    marginRight: 10,
-                                }}
-                            >
-                                {capitalize(theme)}
-                            </Text>
-                            <View style={styles.iconContainer}>
-                                <Ionicons
-                                    name="chevron-up-outline"
-                                    size={20}
-                                    color={colors.onSurface}
-                                    style={{ marginBottom: -3 }}
-                                />
-                                <Ionicons
-                                    name="chevron-down-outline"
-                                    size={20}
-                                    color={colors.onSurface}
-                                    style={{ marginTop: -3 }}
-                                />
-                            </View>
-                        </TouchableOpacity>
-                    </ContextMenu>
+                        <Text
+                            style={{
+                                color: colors.onSurface,
+                                fontSize: 18,
+                                marginRight: 10,
+                            }}
+                        >
+                            {capitalize(theme)}
+                        </Text>
+                        <Ionicons
+                            name="chevron-down-outline"
+                            size={20}
+                            color={colors.onSurface}
+                        />
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.settingsItem}>
                     <Ionicons
@@ -134,6 +107,47 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                     />
                     <Text style={[styles.logoutButtonText, { color: colors.error }]}>Logout</Text>
                 </TouchableOpacity>
+
+                <Modal
+                    isVisible={themeModalVisible}
+                    onBackdropPress={() => setThemeModalVisible(false)}
+                    style={styles.themeSelectionModal}
+                >
+                    <View style={[styles.modalContent, { backgroundColor: colors.background }]}>
+                        <Text style={[styles.modalTitle, { color: colors.onSurface }]}>Select Color Scheme</Text>
+                        <RadioButton.Group
+                            onValueChange={(value) => setTheme(value as 'system' | 'light' | 'dark')}
+                            value={theme}
+                        >
+                            <RadioButton.Item
+                                label="System"
+                                value="system"
+                                color={colors.primary}
+                                labelStyle={{ color: colors.onSurface }}
+                            />
+                            <RadioButton.Item
+                                label="Light"
+                                value="light"
+                                color={colors.primary}
+                                labelStyle={{ color: colors.onSurface }}
+                            />
+                            <RadioButton.Item
+                                label="Dark"
+                                value="dark"
+                                color={colors.primary}
+                                labelStyle={{ color: colors.onSurface }}
+                            />
+                        </RadioButton.Group>
+                        <Button
+                            mode="contained"
+                            onPress={() => setThemeModalVisible(false)}
+                            style={{ marginTop: 20 }}
+                            color={colors.primary}
+                        >
+                            OK
+                        </Button>
+                    </View>
+                </Modal>
             </View>
         </Modal>
     );
@@ -148,6 +162,7 @@ const styles = StyleSheet.create({
     },
     settingsContent: {
         padding: 20,
+        paddingBottom: 45,
         borderTopLeftRadius: 12,
         borderTopRightRadius: 12,
     },
@@ -165,11 +180,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
-    iconContainer: {
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
     userEmailValue: {
         fontSize: 15,
     },
@@ -180,5 +190,21 @@ const styles = StyleSheet.create({
     },
     logoutButtonText: {
         fontSize: 16,
+    },
+    themeSelectionModal: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        margin: 0,
+    },
+    modalContent: {
+        padding: 20,
+        borderRadius: 8,
+        width: '80%',
+        alignItems: 'center',
+    },
+    modalTitle: {
+        fontSize: 18,
+        marginBottom: 20,
+        textAlign: 'center',
     },
 });
