@@ -13,7 +13,20 @@
           "package_name": "com.stylecoach"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "378203909674-9c3c1lptiqq3ulqgmv9pghq52o9s9gqh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.stylecoach",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "378203909674-8vui5vl7544u914g6pu6hv53ihsr73sl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBg_90vdNh34lVrb2DyzXnAVmvqyj6_V88"
@@ -21,7 +34,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "378203909674-8vui5vl7544u914g6pu6hv53ihsr73sl.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "378203909674-6h62feg98bs01bq81lf9n9vl0hcjlcae.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.weyoun.stylecoach"
+              }
+            }
+          ]
         }
       }
     }
