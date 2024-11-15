@@ -1,19 +1,24 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image } from 'react-native';
 import { TextInput, Button, Text, useTheme } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { AppleButton } from '@invertase/react-native-apple-authentication';
+import {
+  GoogleSignin,
+  isSuccessResponse,
+} from '@react-native-google-signin/google-signin';
+import { appleAuth, AppleButton } from '@invertase/react-native-apple-authentication';
 import auth from '@react-native-firebase/auth';
-import { appleAuth } from '@invertase/react-native-apple-authentication';
 import { SignInProps } from '../types/types';
 import { authStyles } from '../styles/authStyles';
 
 function SignInScreen({ navigation }: SignInProps) {
-  const [value, setValue] = React.useState({
+  const [value, setValue] = useState({
     email: '',
     password: '',
     error: '',
   });
+  const [userInfo, setUserInfo] = useState<import('@react-native-google-signin/google-signin').User | null>(null);
+  const [inProgress, setInProgress] = useState(false);
   const { colors } = useTheme();
 
   async function signIn() {
@@ -37,18 +42,43 @@ function SignInScreen({ navigation }: SignInProps) {
       // See: https://github.com/invertase/react-native-apple-authentication#faqs
       requestedScopes: [appleAuth.Scope.FULL_NAME, appleAuth.Scope.EMAIL],
     });
-  
+
     // Ensure Apple returned a user identityToken
     if (!appleAuthRequestResponse.identityToken) {
       throw new Error('Apple Sign-In failed - no identify token returned');
     }
-  
+
     // Create a Firebase credential from the response
     const { identityToken, nonce } = appleAuthRequestResponse;
     const appleCredential = auth.AppleAuthProvider.credential(identityToken, nonce);
-  
+
     // Sign the user in with the credential
     return auth().signInWithCredential(appleCredential);
+  }
+
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId: '378203909674-8vui5vl7544u914g6pu6hv53ihsr73sl.apps.googleusercontent.com'
+    });
+  }, []);
+
+  async function onGoogleButtonPress() {
+    setInProgress(true);
+    try {
+      await GoogleSignin.hasPlayServices();
+      const response = await GoogleSignin.signIn();
+      if (isSuccessResponse(response)) {
+        const { idToken } = response.data;
+        const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+        await auth().signInWithCredential(googleCredential);
+        setUserInfo(response.data);
+      }
+    } catch (error: any) {
+      console.log(error)
+      setValue({ ...value, error: 'Someting went wrong.' });
+    } finally {
+      setInProgress(false);
+    }
   }
 
   return (
@@ -100,14 +130,31 @@ function SignInScreen({ navigation }: SignInProps) {
         Sign In
       </Button>
       <AppleButton
-        buttonStyle={AppleButton.Style.WHITE}
+        buttonStyle={AppleButton.Style.WHITE_OUTLINE}
         buttonType={AppleButton.Type.SIGN_IN}
         style={{
-          width: 160,
-          height: 45,
+          width: "100%",
+          height: 60,
         }}
         onPress={() => onAppleButtonPress().then(() => console.log('Apple sign-in complete!'))}
       />
+      <Button
+        mode="contained"
+        onPress={onGoogleButtonPress}
+        loading={inProgress}
+        style={[authStyles.googleButton, { backgroundColor: colors.surface, borderColor: colors.surfaceVariant }]}
+        contentStyle={authStyles.content}
+        uppercase={false}
+        labelStyle={{ color: colors.onSurface }}
+        icon={() => (
+          <Image
+            source={require('../../assets/google_icon.png')}
+            style={authStyles.icon}
+          />
+        )}
+      >
+        Sign in with Google
+      </Button>
       <Text style={authStyles.footerText}>
         Don't have an account?{' '}
         <Text

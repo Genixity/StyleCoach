@@ -21,7 +21,7 @@ export const authStyles = StyleSheet.create({
     marginBottom: 16,
   },
   button: {
-    marginTop: 8,
+    marginVertical: 8,
   },
   footerText: {
     textAlign: 'center',
@@ -37,5 +37,21 @@ export const authStyles = StyleSheet.create({
   messageText: {
     marginBottom: 10,
     textAlign: 'center',
+  },
+  googleButton: {
+    width: '100%',
+    marginVertical: 10,
+    borderRadius: 5,
+    borderWidth: 2,
+  },
+  content: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  icon: {
+    width: 18,
+    height: 18,
+    marginRight: 10,
   },
 });

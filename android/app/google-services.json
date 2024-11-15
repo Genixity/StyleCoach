@@ -15,11 +15,35 @@
       },
       "oauth_client": [
         {
+          "client_id": "378203909674-0hmc5hrjgq6ji67p3e4uec9a1b7bpio9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.stylecoach",
+            "certificate_hash": "85e2e66be6e1aee70e34a6c03d71795066d699fc"
+          }
+        },
+        {
           "client_id": "378203909674-9c3c1lptiqq3ulqgmv9pghq52o9s9gqh.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.stylecoach",
             "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "378203909674-ddt1csn0mgpsme5totcb6o253qvl50g7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.stylecoach",
+            "certificate_hash": "679cabc72be114aabedd9a21ab7b95c255e28606"
+          }
+        },
+        {
+          "client_id": "378203909674-ncjktnoed7eprpotgt7rtm43l32pigre.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.stylecoach",
+            "certificate_hash": "7a1838fbcb99b773e46d6c492274fc1b5e8b167e"
           }
         },
         {
