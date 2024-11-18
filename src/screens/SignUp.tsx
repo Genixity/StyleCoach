@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Image } from 'react-native';
+import { Image, Platform } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { TextInput, Button, Text, useTheme } from 'react-native-paper';
 import {
@@ -26,7 +26,6 @@ function SignUpScreen({ navigation }: SignUpProps) {
       setValue({ ...value, error: 'Please enter email and password.' });
       return;
     }
-
     setInProgress(true);
     try {
       await auth().createUserWithEmailAndPassword(value.email, value.password);
@@ -38,30 +37,21 @@ function SignUpScreen({ navigation }: SignUpProps) {
   };
 
   async function onAppleButtonPress() {
-    // Start the sign-in request
     const appleAuthRequestResponse = await appleAuth.performRequest({
       requestedOperation: appleAuth.Operation.LOGIN,
-      // As per the FAQ of react-native-apple-authentication, the name should come first in the following array.
-      // See: https://github.com/invertase/react-native-apple-authentication#faqs
       requestedScopes: [appleAuth.Scope.FULL_NAME, appleAuth.Scope.EMAIL],
     });
-
-    // Ensure Apple returned a user identityToken
     if (!appleAuthRequestResponse.identityToken) {
       throw new Error('Apple Sign-In failed - no identify token returned');
     }
-
-    // Create a Firebase credential from the response
     const { identityToken, nonce } = appleAuthRequestResponse;
     const appleCredential = auth.AppleAuthProvider.credential(identityToken, nonce);
-
-    // Sign the user in with the credential
     return auth().signInWithCredential(appleCredential);
   }
 
   useEffect(() => {
     GoogleSignin.configure({
-      webClientId: '378203909674-8vui5vl7544u914g6pu6hv53ihsr73sl.apps.googleusercontent.com'
+      webClientId: '378203909674-8vui5vl7544u914g6pu6hv53ihsr73sl.apps.googleusercontent.com',
     });
   }, []);
 
@@ -77,8 +67,7 @@ function SignUpScreen({ navigation }: SignUpProps) {
         setUserInfo(response.data);
       }
     } catch (error: any) {
-      console.log(error)
-      setValue({ ...value, error: 'Someting went wrong.' });
+      setValue({ ...value, error: 'Something went wrong.' });
     } finally {
       setInProgress(false);
     }
@@ -97,7 +86,6 @@ function SignUpScreen({ navigation }: SignUpProps) {
       <Text style={[authStyles.headerText, { color: colors.primary }]}>
         Sign Up
       </Text>
-
       <TextInput
         label="Email"
         value={value.email}
@@ -133,21 +121,25 @@ function SignUpScreen({ navigation }: SignUpProps) {
       >
         Sign Up
       </Button>
-
-      <AppleButton
-        buttonStyle={AppleButton.Style.WHITE_OUTLINE}
-        buttonType={AppleButton.Type.SIGN_IN}
-        style={{
-          width: "100%",
-          height: 60,
-        }}
-        onPress={() => onAppleButtonPress().then(() => console.log('Apple sign-in complete!'))}
-      />
+      {Platform.OS === 'ios' && (
+        <AppleButton
+          buttonStyle={AppleButton.Style.WHITE_OUTLINE}
+          buttonType={AppleButton.Type.SIGN_IN}
+          style={{
+            width: '100%',
+            height: 60,
+          }}
+          onPress={() => onAppleButtonPress().then(() => console.log('Apple sign-in complete!'))}
+        />
+      )}
       <Button
         mode="contained"
         onPress={onGoogleButtonPress}
         loading={inProgress}
-        style={[authStyles.googleButton, { backgroundColor: colors.surface, borderColor: colors.surfaceVariant }]}
+        style={[
+          authStyles.googleButton,
+          { backgroundColor: colors.surface, borderColor: colors.surfaceVariant },
+        ]}
         contentStyle={authStyles.content}
         uppercase={false}
         labelStyle={{ color: colors.onSurface }}
@@ -160,7 +152,6 @@ function SignUpScreen({ navigation }: SignUpProps) {
       >
         Sign in with Google
       </Button>
-
       <Text style={authStyles.footerText}>
         Already have an account?{' '}
         <Text
